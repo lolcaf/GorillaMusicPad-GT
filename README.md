@@ -1,6 +1,5 @@
 # GorillaMusicPad-GT
-A BepInEx/Melonloader mod for Gorilla Tag that brings a music player pad to the game. Import your songs and listen to them while you play!\
-This mod has no dependency.\
+A BepInEx mod for Gorilla Tag that brings a music player pad to the game. Import your songs and listen to them while you play!\
 If you find a bug or issue with this mod please make an issue in the [Issues Tab](https://github.com/lolcaf/GorillaMusicPad-GT/issues)
 ## How To Use
 ### Introduction
