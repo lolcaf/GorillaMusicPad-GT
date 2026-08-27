@@ -38,6 +38,8 @@ namespace GorillaMusicPad.MonoBehaviors
 
             offsetGO = transform.Find("Offset").gameObject;
             offsetGO.transform.Find("VersionText").GetComponent<TextMeshPro>().text = "Version: " + Constants.Version;
+            offsetGO.transform.localScale = Vector3.one * 1.5f; // fix the offset because I dont feel like rebuilding the asset bundle
+            offsetGO.transform.localPosition = new Vector3(-0.2f, 0.15f, 0.15f);
 
             MainScreen.go = offsetGO.transform.Find("MainScreen").gameObject;
             NoSongsScreen.go = offsetGO.transform.Find("NoSongsScreen").gameObject;
