@@ -23,6 +23,8 @@ namespace GorillaMusicPad.MonoBehaviors
 
         private float menuButtonCooldown = 0;
 
+        private GameObject musicParticles;
+
         private static readonly Dictionary<string, AudioType> audioTypes = new Dictionary<string, AudioType> // supported audio types
         {
             { ".mp3",  AudioType.MPEG    },
@@ -43,6 +45,9 @@ namespace GorillaMusicPad.MonoBehaviors
 
             MainScreen.go = offsetGO.transform.Find("MainScreen").gameObject;
             NoSongsScreen.go = offsetGO.transform.Find("NoSongsScreen").gameObject;
+            musicParticles = offsetGO.transform.Find("Particles").gameObject;
+            MainScreen.songNameText = MainScreen.go.transform.Find("SongName").gameObject.GetComponent<TextMeshPro>();
+            MainScreen.volumeText = MainScreen.go.transform.Find("VolumeText").gameObject.GetComponent<TextMeshPro>();
 
             // setup the buttons
             NoSongsScreen.go.transform.Find("DownloadSongs").gameObject.AddComponent<PressableButton>().buttonPressed += NoSongsScreen.DownloadSongs;
@@ -72,27 +77,28 @@ namespace GorillaMusicPad.MonoBehaviors
 
         private void Update()
         {
-            if (menuOpen)
-            {
-                transform.position = VRRig.LocalRig.leftHandTransform.position;
-                transform.rotation = VRRig.LocalRig.leftHandTransform.rotation;
-            }
-
             if (ControllerInputPoller.instance.leftControllerPrimaryButton && Time.time > menuButtonCooldown)
             {
                 menuButtonCooldown = Time.time + 0.4f;
                 menuOpen = !menuOpen;
-                transform.position = Vector3.zero;
-                if (Main.Instance.musicPlayer.clip == null) Main.Instance.musicPlayer.clip = songs.FirstOrDefault();
-                MainScreen.go.transform.Find("SongName").gameObject.GetComponent<TextMeshPro>().text = Main.Instance.musicPlayer.clip.name;
-            }
 
-            offsetGO.transform.Find("Particles").gameObject.SetActive(Main.Instance.musicPlayer.isPlaying);
+                transform.SetParent(VRRig.LocalRig.leftHandTransform, false);
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
+
+                musicParticles.SetActive(Main.Instance.musicPlayer.isPlaying);
+                if (Main.Instance.musicPlayer.clip == null) Main.Instance.musicPlayer.clip = songs.FirstOrDefault();
+                MainScreen.songNameText.text = Main.Instance.musicPlayer.clip.name;
+            }
         }
 
-        private class MainScreen
+        private static class MainScreen
         {
             public static GameObject go;
+
+            public static TextMeshPro songNameText;
+
+            public static TextMeshPro volumeText;
 
             public static void Open()
             {
@@ -101,11 +107,11 @@ namespace GorillaMusicPad.MonoBehaviors
                 if (instance.songs.Count > 0)
                 {
                     if (Main.Instance.musicPlayer.clip == null) Main.Instance.musicPlayer.clip = instance.songs.FirstOrDefault();
-                    go.transform.Find("SongName").gameObject.GetComponent<TextMeshPro>().text = Main.Instance.musicPlayer.clip.name;
+                    songNameText.text = Main.Instance.musicPlayer.clip.name;
                 }
                 else
                 {
-                    go.transform.Find("SongName").gameObject.GetComponent<TextMeshPro>().text = "Missing Song";
+                    songNameText.text = "Missing Song";
                 }
             }
 
@@ -117,7 +123,7 @@ namespace GorillaMusicPad.MonoBehaviors
                 {
                     songIndex++;
                     Main.Instance.musicPlayer.clip = instance.songs[songIndex];
-                    go.transform.Find("SongName").GetComponent<TextMeshPro>().text = instance.songs[songIndex].name;
+                    songNameText.text = instance.songs[songIndex].name;
                 }
             }
 
@@ -129,7 +135,7 @@ namespace GorillaMusicPad.MonoBehaviors
                 {
                     songIndex--;
                     Main.Instance.musicPlayer.clip = instance.songs[songIndex];
-                    go.transform.Find("SongName").GetComponent<TextMeshPro>().text = instance.songs[songIndex].name;
+                    songNameText.text = instance.songs[songIndex].name;
                 }
             }
 
@@ -137,18 +143,19 @@ namespace GorillaMusicPad.MonoBehaviors
             {
                 if (Main.Instance.musicPlayer.isPlaying) Main.Instance.musicPlayer.Pause();
                 else Main.Instance.musicPlayer.Play();
+                instance.musicParticles.SetActive(Main.Instance.musicPlayer.isPlaying);
             }
 
             public static void TurnUpVolume()
             {
                 Main.Instance.musicPlayer.volume += 0.05f;
-                go.transform.Find("VolumeText").gameObject.GetComponent<TextMeshPro>().text = $"{Mathf.Round(Main.Instance.musicPlayer.volume * 100)}%";
+                volumeText.text = $"{Mathf.Round(Main.Instance.musicPlayer.volume * 100)}%";
             }
 
             public static void TurnDownVolume()
             {
                 Main.Instance.musicPlayer.volume -= 0.05f;
-                go.transform.Find("VolumeText").gameObject.GetComponent<TextMeshPro>().text = $"{Mathf.Round(Main.Instance.musicPlayer.volume * 100)}%";
+                volumeText.text = $"{Mathf.Round(Main.Instance.musicPlayer.volume * 100)}%";
             }
         }
 
