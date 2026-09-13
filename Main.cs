@@ -14,8 +14,6 @@ public class Main : MonoBehaviour
     public static GorillaLog Log = new GorillaLog();
 
     // Mod variables
-    private GameObject theMenu;
-
     public AudioSource musicPlayer;
 
     // This is called when the mod initializes
@@ -29,7 +27,7 @@ public class Main : MonoBehaviour
         // can still work even if yours breaks.
         GorillaTagger.OnPlayerSpawned(() => MethodUtilities.Attempt(OnPlayerSpawned));
 
-        musicPlayer = new GameObject("GorillaMusicPad-MusicPlayer").AddComponent<AudioSource>();
+        musicPlayer = new GameObject("MusicPlayer").AddComponent<AudioSource>();
         musicPlayer.loop = true;
         musicPlayer.volume = 0.2f;
         DontDestroyOnLoad(musicPlayer.gameObject);
