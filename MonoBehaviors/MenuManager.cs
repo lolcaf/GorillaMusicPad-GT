@@ -77,19 +77,25 @@ namespace GorillaMusicPad.MonoBehaviors
 
         private void Update()
         {
+            if (menuOpen)
+            {
+                transform.position = VRRig.LocalRig.leftHandTransform.position;
+                transform.rotation = VRRig.LocalRig.leftHandTransform.rotation;
+            }
+
             if (ControllerInputPoller.instance.leftControllerPrimaryButton && Time.time > menuButtonCooldown)
             {
                 menuButtonCooldown = Time.time + 0.4f;
                 menuOpen = !menuOpen;
 
-                transform.SetParent(VRRig.LocalRig.leftHandTransform, false);
-                transform.localPosition = Vector3.zero;
-                transform.localRotation = Quaternion.identity;
+                transform.position = Vector3.zero;
 
                 musicParticles.SetActive(Main.Instance.musicPlayer.isPlaying);
                 if (Main.Instance.musicPlayer.clip == null) Main.Instance.musicPlayer.clip = songs.FirstOrDefault();
                 MainScreen.songNameText.text = Main.Instance.musicPlayer.clip.name;
             }
+            if (musicParticles.activeSelf != Main.Instance.musicPlayer.isPlaying)
+                musicParticles.SetActive(Main.Instance.musicPlayer.isPlaying);
         }
 
         private static class MainScreen
@@ -143,7 +149,6 @@ namespace GorillaMusicPad.MonoBehaviors
             {
                 if (Main.Instance.musicPlayer.isPlaying) Main.Instance.musicPlayer.Pause();
                 else Main.Instance.musicPlayer.Play();
-                instance.musicParticles.SetActive(Main.Instance.musicPlayer.isPlaying);
             }
 
             public static void TurnUpVolume()
