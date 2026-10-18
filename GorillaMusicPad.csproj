@@ -9,7 +9,7 @@
         <!-- Allow variables to be null, which may help you write better code -->
         <Nullable>enable</Nullable>
 
-        <!-- Ensure you are building the mod for 64-bit, a requirement of MelonLoader -->
+        <!-- Ensure you are building the mod for 64-bit -->
         <PlatformTarget>x64</PlatformTarget>
 
         <!-- Include information about what functions are called to make debugging easier. -->
@@ -35,9 +35,10 @@
 		<Reference Include="BepInEx">
 		  <HintPath>$(DependenciesPath)\BepInEx.dll</HintPath>
 		</Reference>
-		<Reference Include="MelonLoader">
-			<HintPath>$(DependenciesPath)\MelonLoader.dll</HintPath>
-		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\gorillamusicpad" />
 	</ItemGroup>
 
     <ItemGroup>
@@ -792,5 +793,9 @@
         <Reference Include="ZString">
           <HintPath>$(GameAssemblyPath)\ZString.dll</HintPath>
         </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\" />
     </ItemGroup>
 </Project>

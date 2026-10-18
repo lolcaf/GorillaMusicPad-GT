@@ -1,6 +1,4 @@
-using GorillaMusicPad.Classes;
 using GorillaMusicPad.MonoBehaviors;
-using GorillaMusicPad.Patches;
 using GorillaMusicPad.Utilities;
 using UnityEngine;
 
@@ -10,9 +8,6 @@ public class Main : MonoBehaviour
 {
     public static Main? Instance;
 
-    // This is a log, used for writing information for debug purposes
-    public static GorillaLog Log = new GorillaLog();
-
     // Mod variables
     public AudioSource musicPlayer;
 
@@ -21,11 +16,9 @@ public class Main : MonoBehaviour
     {
         Instance = this;
 
-        HarmonyPatches.Patch(); // Patch the game
-
         // Stops the OnPlayerSpawned method from creating unhandled errors, so other mods
         // can still work even if yours breaks.
-        GorillaTagger.OnPlayerSpawned(() => MethodUtilities.Attempt(OnPlayerSpawned));
+        GorillaTagger.OnPlayerSpawned(OnPlayerSpawned);
 
         musicPlayer = new GameObject("MusicPlayer").AddComponent<AudioSource>();
         musicPlayer.loop = true;
@@ -43,5 +36,11 @@ public class Main : MonoBehaviour
     {
         GameObject menu = AssetBundleUtilities.Load("GorillaMusicPad.Resources.gorillamusicpad", "MusicPad");
         Instantiate(menu).AddComponent<MenuManager>();
+    }
+
+    public void SelectSong(AudioClip clip)
+    {
+        musicPlayer.clip = clip;
+        MenuManager.MainScreen.songNameText.text = clip.name;
     }
 }
