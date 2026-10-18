@@ -98,7 +98,7 @@ public class MenuManager : MonoBehaviour // this will be attached to the menu
         }
     }
 
-    private static bool showRoomCode = true;
+    public static bool showRoomCode = true;
 
     private static PressableButton pauseButton;
 
@@ -374,6 +374,7 @@ public class MenuManager : MonoBehaviour // this will be attached to the menu
             RoomScreen.go.SetActive(false);
             SongListScreen.go.SetActive(false);
             TimeScreen.go.SetActive(false);
+            go.transform.Find("ShowRoomCode").Find("Text (TMP)").GetComponent<TextMeshPro>().text = $"Show Room Code (<color=blue>{showRoomCode}</color>)";
         }
 
         public static void SwitchTheme()
@@ -591,6 +592,17 @@ public class MenuManager : MonoBehaviour // this will be attached to the menu
         PressableButton.ChangeButtonColors(menuTheme.buttonColor);
     }
 
+    public static MenuTheme GetThemeFromName(string name)
+    {
+        foreach (MenuTheme theme in menuThemes)
+        {
+            if (theme.name == name)
+                return theme;
+        }
+        NotificationSystem.Send($"<color=red>Failed to find theme with name: {name}</color>");
+        return null;
+    }
+
     private static bool GetJoystickClick()
     {
         bool click = false;
@@ -609,6 +621,7 @@ public class MenuManager : MonoBehaviour // this will be attached to the menu
     private IEnumerator LoadSongs()
     {
         songs.Clear();
+        Main.Instance.musicPlayer.clip = null;
         string musicPath = Path.Combine(Application.dataPath, "..", "GorillaMusicPad", "Music");
         MainScreen.go.SetActive(false);
         yield return StartCoroutine(LoadAudioFile(musicPath, clips =>

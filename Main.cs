@@ -1,3 +1,4 @@
+using GorillaMusicPad.Classes;
 using GorillaMusicPad.MonoBehaviors;
 using GorillaMusicPad.Utilities;
 using UnityEngine;
@@ -30,6 +31,11 @@ public class Main : MonoBehaviour
     private void OnPlayerSpawned()
     {
         LoadAssetBundle();
+    }
+
+    private void OnApplicationQuit()
+    {
+        HarmonyPatches.Unpatch();
     }
 
     private void LoadAssetBundle()

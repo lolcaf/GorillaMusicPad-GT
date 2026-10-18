@@ -11,6 +11,9 @@ public class NotificationSystem
         {
             Object.DestroyImmediate(GameObject.Find("NotificationText")); // destroy the overlapping notification text if there is one
         }
+        if (debug)
+            Debug.Log(text);
+
         if (!Constants.DebugMode && debug)
             return;
 
